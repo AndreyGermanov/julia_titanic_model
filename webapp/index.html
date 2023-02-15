@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Titanic</title>
+</head>
+<body>
+    <table>
+        <tbody>
+            <tr>
+                <td>Ticket class</td>
+                <td>
+                    <select id="pclass">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Sex</td>
+                <td>
+                    <select id="sex">
+                        <option value="1">Female</option>                        
+                        <option value="2">Male</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Age</td>
+                <td>
+                    <input id="age" type="number"/>
+                </td>
+            </tr>
+            <tr>
+                <td># of Siblings/Spouces</td>
+                <td>
+                    <input id="sibsp" type="number"/>
+                </td>
+            </tr>
+            <tr>
+                <td># of Parents/children</td>
+                <td>
+                    <input id="parch" type="number"/>
+                </td>
+            </tr>
+            <tr>
+                <td>Fare</td>
+                <td>
+                    <input id="fare"/>
+                </td>
+            </tr>
+            <tr>
+                <td>Embarked</td>
+                <td>
+                    <select id="embarked">
+                        <option value="1">S</option>
+                        <option value="2">C</option>
+                        <option value="3">Q</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Survived</td>
+                <td id="survived"></td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <div>
+                        <button id="submit" type="button">PREDICT</button>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <script>
+        document.getElementById("survived").innerHTML = "";
+        document.getElementById("submit").addEventListener("click",async() => {
+            response = await fetch("http://localhost:8080",{
+                method:"POST",
+                body: JSON.stringify({
+                    "pclass":parseInt(document.getElementById("pclass").value),
+                    "sex":parseInt(document.getElementById("sex").value),
+                    "age":parseFloat(document.getElementById("age").value),
+                    "sibsp":parseInt(document.getElementById("sibsp").value),
+                    "parch":parseInt(document.getElementById("parch").value),
+                    "fare":parseFloat(document.getElementById("fare").value),
+                    "embarked":parseInt(document.getElementById("embarked").value),
+                })
+            });
+            const survivedCode =  parseInt(await response.text());
+            document.getElementById("survived").innerHTML = survivedCode ? "YES" : "NO"
+        })
+    </script>
+    <style>
+        input,select {
+            width:100%;
+        }
+        td {
+            padding:5px;
+        }
+        td > div {
+            text-align: center;
+        }
+        #survived {
+            font-weight: bold;
+            color:green;
+        }
+    </style>
+</body>
+</html>
